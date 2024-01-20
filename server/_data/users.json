@@ -1,0 +1,107 @@
+[
+  {
+    "_id": "5d7a514b5d2c12c7449be042",
+    "username": "AdminAccount",
+    "email": "admin@gmail.com",
+    "role": "user",
+    "password": "123456"
+  },
+  {
+    "_id": "5d7a514b5d2c12c7449be043",
+    "username": "PublisherAccount",
+    "email": "publisher@gmail.com",
+    "role": "publisher",
+    "password": "123456"
+  },
+  {
+    "_id": "5d7a514b5d2c12c7449be044",
+    "username": "UserAccount",
+    "email": "user@gmail.com",
+    "role": "user",
+    "password": "123456"
+  },
+  {
+    "_id": "5d7a514b5d2c12c7449be045",
+    "username": "JohnDoe",
+    "email": "john@gmail.com",
+    "role": "publisher",
+    "password": "123456"
+  },
+  {
+    "_id": "5d7a514b5d2c12c7449be046",
+    "username": "KevinSmith",
+    "email": "kevin@gmail.com",
+    "role": "publisher",
+    "password": "123456"
+  },
+  {
+    "_id": "5c8a1d5b0190b214360dc031",
+    "username": "MaryWilliams",
+    "email": "mary@gmail.com",
+    "role": "publisher",
+    "password": "123456"
+  },
+  {
+    "_id": "5c8a1d5b0190b214360dc032",
+    "username": "BabaGanush",
+    "email": "baba@gmail.com",
+    "role": "publisher",
+    "password": "123456"
+  },
+  {
+    "_id": "5c8a1d5b0190b214360dc033",
+    "username": "GregHarris",
+    "email": "greg@gmail.com",
+    "role": "user",
+    "password": "123456"
+  },
+  {
+    "_id": "5c8a1d5b0190b214360dc034",
+    "username": "DerekGlover",
+    "email": "derek@gmail.com",
+    "role": "user",
+    "password": "123456"
+  },
+  {
+    "_id": "5c8a1d5b0190b214360dc035",
+    "username": "StephanieHanson",
+    "email": "steph@gmail.com",
+    "role": "user",
+    "password": "123456"
+  },
+  {
+    "_id": "5c8a1d5b0190b214360dc036",
+    "username": "JerryWiliams",
+    "email": "jerry@gmail.com",
+    "role": "user",
+    "password": "123456"
+  },
+  {
+    "_id": "5c8a1d5b0190b214360dc037",
+    "username": "MaggieJohnson",
+    "email": "maggie@gmail.com",
+    "role": "user",
+    "password": "123456"
+  },
+  {
+    "_id": "5c8a1d5b0190b214360dc038",
+    "username": "BarryDickens",
+    "email": "barry@gmail.com",
+    "role": "user",
+    "password": "123456"
+  },
+  {
+    "_id": "5c8a1d5b0190b214360dc039",
+    "username": "RyanBolin",
+    "email": "ryan@gmail.com",
+    "role": "user",
+    "password": "123456"
+  },
+  {
+    "_id": "5c8a1d5b0190b214360dc040",
+    "username": "SaraKensing",
+    "email": "sara@gmail.com",
+    "role": "user",
+    "password": "123456"
+  }
+]
