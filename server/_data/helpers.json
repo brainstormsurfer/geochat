@@ -1,50 +1,38 @@
 [
   {
-    "_id": "5d713995b721c3bb38c1f5d0",
-    "user": "5d7a514b5d2c12c7449be045",
-    "username": "teddyBear",
+    "_id": "5d7a514b5d2c12c7449be042",
     "description": "I'll take it from here",
     "isAvailable": true,
     "phone": "(111) 111-1111",
     "email": "teddy@spaceworks.com",
     "address": "233 Bay State Rd Boston MA 02215",
-    "upcomingEvents": ["Sun", "Moon", "Eclipse"],
     "mobility": true
   },
   {
-    "_id": "5d713a66ec8f2b88b8f830b8",
-    "user": "5d7a514b5d2c12c7449be046",
-    "username": "serenetyNow",
+    "_id": "5d7a514b5d2c12c7449be045",
     "description": "You are in trustful hands",
     "isAvailable": true,
     "phone": "(222) 222-2222",
     "email": "wild@moderntech.com",
     "address": "220 Pawtucket St, Lowell, MA 01854",
-    "upcomingEvents": ["Earth", "Fire", "Wind"],
     "mobility": true
   },
   {
-    "_id": "5d725a037b292f5f8ceff787",
-    "user": "5c8a1d5b0190b214360dc031",
-    "username": "pickyBlinder",
+    "_id": "5c8a1d5b0190b214360dc031",
     "description": "Breath. Just breath...",
     "isAvailable": true,
     "phone": "(333) 333-3333",
     "email": "snoring@codemasters.com",
     "address": "85 South Prospect Street Burlington VT 05405",
-    "upcomingEvents": ["Magic", "Stone", "Air"],
     "mobility": true
   },
   {
-    "_id": "5d725a1b7b292f5f8ceff788",
-    "user": "5c8a1d5b0190b214360dc032",
-    "username": "frenchAccent",
+    "_id": "5d713995b721c3bb38c1f5d0",
     "description": "Are you looking for me..?",
     "isAvailable": true,
     "phone": "(444) 444-4444",
     "email": "french@spacecentral.com",
     "address": "45 Upper College Rd Kingston RI 02881",
-    "upcomingEvents": ["Storm", "Mountain", "Cloud"],
     "mobility": false
   }
 ]

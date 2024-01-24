@@ -36,6 +36,13 @@ export const advancedResults = (model, populate) => async (req, res, next) => {
     query = query.sort("-createdAt");
   }
 
+  // Check if countdown filter is present
+  if (req.query.countdown) {
+    const today = new Date();
+    const countdownFilter = differenceInDays(req.query.countdown, today);
+    reqQuery.date = { $gte: today, $lte: countdownFilter };
+  }
+
   // Pagination
   const page = parseInt(req.query.page, 10) || 1;
   const limit = parseInt(req.query.limit, 10) || 25;

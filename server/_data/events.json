@@ -7,7 +7,6 @@
     "expectedPresence": 80,
     "potentialExplorers": 4,
     "IsAtNature": true,
-    "helper": "5d713995b721c3bb38c1f5d0",
     "user": "5d7a514b5d2c12c7449be045"
   },
   {
@@ -18,7 +17,6 @@
     "expectedPresence": 150,
     "potentialExplorers": 0,
     "IsAtNature": true,
-    "helper": "5d713995b721c3bb38c1f5d0",
     "user": "5d7a514b5d2c12c7449be045"
   },
   {
@@ -29,7 +27,6 @@
     "expectedPresence": 5,
     "potentialExplorers": 0,
     "IsAtNature": true,
-    "helper": "5d713a66ec8f2b88b8f830b8",
     "user": "5d7a514b5d2c12c7449be046"
   },
   {
@@ -40,7 +37,6 @@
     "expectedPresence": 25,
     "potentialExplorers": 17,
     "IsAtNature": true,
-    "helper": "5d713a66ec8f2b88b8f830b8",
     "user": "5d7a514b5d2c12c7449be046"
   },
   {
@@ -51,7 +47,6 @@
     "expectedPresence": 400,
     "potentialExplorers": 6,
     "IsAtNature": true,
-    "helper": "5d725a037b292f5f8ceff787",
     "user": "5c8a1d5b0190b214360dc031"
   },
   {
@@ -62,7 +57,6 @@
     "expectedPresence": 600,
     "potentialExplorers": 0,
     "IsAtNature": false,
-    "helper": "5d725a037b292f5f8ceff787",
     "user": "5c8a1d5b0190b214360dc031"
   },
   {
@@ -73,7 +67,6 @@
     "expectedPresence": 55,
     "potentialExplorers": 3,
     "IsAtNature": false,
-    "helper": "5d725a1b7b292f5f8ceff788",
     "user": "5c8a1d5b0190b214360dc032"
   },
   {
@@ -84,7 +77,6 @@
     "expectedPresence": 13,
     "potentialExplorers": 2,
     "IsAtNature": false,
-    "helper": "5d725a1b7b292f5f8ceff788",
     "user": "5c8a1d5b0190b214360dc032"
   },
   {
@@ -95,7 +87,6 @@
     "expectedPresence": 1,
     "potentialExplorers": 1,
     "IsAtNature": true,
-    "helper": "5d725a1b7b292f5f8ceff788",
     "user": "5c8a1d5b0190b214360dc032"
   }
 ]

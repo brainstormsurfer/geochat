@@ -31,7 +31,25 @@ const FeedbackSchema = new mongoose.Schema({
     ref: "User",
     required: false, //?
   },
-});
+},
+  {
+    toJSON: {
+      transform(_, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+        delete ret.__v;
+      },
+    },
+    toObject: {
+      transform(_, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+        delete ret.__v;
+      },
+    }
+  });
 
 // Prevent user from submitting more than one feedbacks per helper
 FeedbackSchema.index({ helper: 1, user: 1 }, { unique: true });

@@ -105,7 +105,7 @@ app.use("/api/v1/feedbacks", feedbacks);
 
 app.use(errorHandler);
 
-app.set("trust proxy", 1);
+// app.set("trust proxy", 1);
 
 const PORT = process.env.PORT || 5000;
 

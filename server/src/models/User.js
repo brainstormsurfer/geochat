@@ -16,12 +16,13 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["user", "publisher"],
+    enum: ["user", "publisher", "helper", "guest", "admin"],
     default: "user",
   },
   password: {
     type: String,
     required: [true, "please add a password"],
+    // 6 chars 1 Upper: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/
     minlength: 6,
     select: false,
   },
@@ -31,7 +32,24 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+},
+{
+  toJSON: {
+    transform(_, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.password;
+      delete ret.__v;
+    },
+  },
+  toObject: {
+    transform(_, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.password;
+      delete ret.__v;
+    },}
+  });
 
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {

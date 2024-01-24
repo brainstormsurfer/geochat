@@ -16,7 +16,7 @@ const getFeedbacks = asyncHandler(async (req, res, next) => {
     // And via the {mergeParams: true} feedbacksRouter property
     return res.status(200).json({
       success: true,
-      count: Feedback.length,
+      count: feedbacks.length,
       data: feedbacks,
     });
   } else {
@@ -45,7 +45,7 @@ const getFeedback = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, data: feedback });
 });
 
-// (preparation: Course is/as  helper's virtual field/attribute)
+// (preparation: Event is/as  helper's virtual field/attribute)
 // @desc    Add feedback
 // @route   POST /api/v1/helpers/:helperId/feedbacks
 // @access  Private

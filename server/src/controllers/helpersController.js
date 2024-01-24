@@ -3,22 +3,33 @@ import ErrorResponse from "../utils/errorResponse.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import geocoder from "../utils/geocoder.js";
 import Helper from "../models/Helper.js";
+// import Event from "../models/Event.js";
+
 import dotenv from "dotenv";
 // Load env vars
 dotenv.config({ path: "./config/config.env" });
 
 // @desc    Get all helpers
 // @route   GET /api/v1/helpers
+// @route   GET /api/v1/helpers/:helperId/events
 // @access  Public
 const getHelpers = asyncHandler(async (req, res, next) => {
-  res.status(200).json(res.advancedResults);
-  // instead of the object which we want to send to the client
-  // we have access for this method (/route) because it use middleware
-  //{(   success: true,
-  //   count: helpers.length,
-  //   pagination,
-  //   data: helpers,
-  // });
+  if (req.params.eventId) {
+    const helpers = await Helper.find({ event: req.params.eventId });
+
+    // getting helpers for a specific event (not using advanced results)
+    // via Event's reverse populate with virtuals,
+    // And via the {mergeParams: true} eventsRouter property
+    return res.status(200).json({
+      success: true,
+      count: helpers.length,
+      data: helpers,
+    });
+  } else {
+    // getting all helpers
+    res.status(200).json(res.advancedResults);
+    // now when we get all helpers we can implement pagination and all the advanced commands
+  }
 });
 
 // @desc    Get single helper
@@ -36,37 +47,40 @@ const getHelper = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, data: helper });
 });
 
+
 // @desc    Create helper
-// @route   POST /api/v1/helpers/:id
-// @access  Private
+// @route   POST /api/v1/helpers
+// @access  Private/Admin
 const createHelper = asyncHandler(async (req, res, next) => {
-  // Add user to req.body
-  req.body.user = req.user.id;
+  // Check if the logged-in user is an admin
+  const adminUser = await User.findOne({ _id: req.user.id, role: "admin" });
 
-  // Check for published helper (any helper which created by the logged in user)
-  const publishedhelper = await Helper.findOne({ user: req.user.id });
-
-  console.log("req.user.id publishedhelper", req.user.id);
-  // If the user is not an admin, they can only add one helper
-  if (publishedhelper && req.user.role !== "admin") {
+  if (!adminUser) {
     return next(
-      new ErrorResponse(
-        `The user with ID ${req.user.id} has already published a helper`,
-        400
-      )
+      new ErrorResponse(`User with ID ${req.user.id} is not permitted for this task`, 403)
     );
   }
 
-  const helper = await Helper.create(req.body);
+  // Create the Helper
+  const helper = await Helper.create({
+    id: req.user.id,
+    description: "added by admin, please edit..."
+  });
+
+  // Update the corresponding user's role to include "helper"
+  await User.findByIdAndUpdate(req.user.id, { role: "helper" });
+
   res.status(201).json({ success: true, data: helper });
 });
+
 
 // @desc    Update helper
 // @route   PUT /api/v1/helpers/:id
 // @access  Private
 const updateHelper = asyncHandler(async (req, res, next) => {
-  // !paying attention where to use: let
-  let helper = await Helper.findById(req.params.id);
+  // let helper = await Helper.findById(req.params.id);
+  let helper = await Helper.findOne({ id: req.user.id });
+
 
   if (!helper) {
     return next(
@@ -75,8 +89,8 @@ const updateHelper = asyncHandler(async (req, res, next) => {
     );
   }
 
-  // Make sure user is helper owner
-  if (Helper.user.toString() !== req.user.id && req.user.role !== "admin") {
+  // Make sure editor is the helper
+  if (Helper.id.toString() !== req.user.id || req.user.role !== "admin") {
     return next(
       new ErrorResponse(
         `User ${req.user.id} is not authorized to update this helper`,
@@ -97,7 +111,10 @@ const updateHelper = asyncHandler(async (req, res, next) => {
 // @route   DELETE /api/v1/helpers/:id
 // @access  Private
 const deleteHelper = asyncHandler(async (req, res, next) => {
-  const helper = await Helper.findById(req.params.id);
+  // const helper = await Helper.findById(req.params.id);
+  const helper = await Helper.findOne({ id: req.user.id });
+
+
   if (!helper) {
     return next(
       // if it is formatted object id but not in db
@@ -105,8 +122,8 @@ const deleteHelper = asyncHandler(async (req, res, next) => {
     );
   }
 
-  // Make sure user is helper owner
-  if (Helper.user.toString() !== req.user.id && req.user.role !== "admin") {
+  // Make sure editted user is the helper
+  if (Helper.id.toString() !== req.user.id && req.user.role !== "admin") {
     return next(
       new ErrorResponse(
         `User ${req.user.id} is not authorized to update this helper`,
@@ -115,7 +132,6 @@ const deleteHelper = asyncHandler(async (req, res, next) => {
     );
   }
 
-  // (*middleware of type - Document Middleware)
   await Helper.deleteOne();
   res.status(200).json({ success: true, data: {} });
 });
@@ -159,8 +175,8 @@ const helperPhotoUpload = asyncHandler(async (req, res, next) => {
     );
   }
 
-  // Make sure user is helper owner
-  if (Helper.user.toString() !== req.user.id && req.user.role !== "admin") {
+  // Make sure editted user is the helper
+  if (Helper.id.toString() !== req.user.id && req.user.role !== "admin") {
     return next(
       new ErrorResponse(
         `User ${req.user.id} is not authorized to update this helper`,

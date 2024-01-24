@@ -1,20 +1,11 @@
 import mongoose from "mongoose";
-import slugify from "slugify";
 import geocoder from "../utils/geocoder.js";
 
 const HelperSchema = new mongoose.Schema(
   {
-    username: {
-      type: String,
-      required: [true, "Please add a username"],
-      unique: true,
-      trim: true,
-      maxlength: [50, "username can not be more than 50 characters"],
-    },
-    slug: String,
     description: {
       type: String,
-      required: [true, "Please add a description"],
+      required: [false, "Please add a description"],
       maxlength: [500, "Description can not be more than 500 characters"],
     },
     isAvailable: {
@@ -25,26 +16,18 @@ const HelperSchema = new mongoose.Schema(
       type: String,
       maxlength: [20, "Phone number can not be longer than 20 characters"],
     },
-    email: {
-      type: String,
-      match: [/^\S+@\S+\.\S+$/, "Please add a valid email"],
-    },
     address: {
       type: String,
-      required: [true, "Please add an address"],
+      required: [false, "Please add an address"],
     },
     location: {
       // GeoJSON
       type: {
         type: String,
         enum: ["Point"],
-        // required: true
-        required: false,
       },
       coordinates: {
         type: [Number],
-        // required: true,
-        required: false,
         index: "2dsphere",
       },
       formattedAddress: String,
@@ -66,59 +49,61 @@ const HelperSchema = new mongoose.Schema(
       type: String,
       default: "no-photo.jpg",
     },
-    upcomingEvents: {
-      type: [{ type: String }],
-      default: [],
-    },
     createdAt: {
       type: Date,
       default: Date.now,
     },
-    user: {
-      type: mongoose.Schema.ObjectId,
-      ref: "User",
-      required: true,
-    },
   },
   {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
+    toJSON: {
+      transform(_, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+        delete ret.__v;
+      },
+    },
+    toObject: {
+      transform(_, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+        delete ret.__v;
+      },
+    }
   }
 );
 
-// Create helper slug from the username
-HelperSchema.pre("save", function (next) {
-  this.slug = slugify(this.username, { lower: true });
-  next();
-});
-
 // Geocode & create location field
 HelperSchema.pre("save", async function (next) {
-  const loc = await geocoder.geocode(this.address);
-  this.location = {
-    type: "Point",
-    coordinates: [loc[0].longitude, loc[0].latitude],
-    formattedAddress: loc[0].formattedAddress,
-    street: loc[0].streetusername,
-    city: loc[0].city,
-    state: loc[0].stateCode,
-    zipcode: loc[0].zipcode,
-    country: loc[0].countryCode,
-  };
+  // Check if the address field is present
+  if (this.address) {
+    const loc = await geocoder.geocode(this.address);
+    this.location = {
+      type: "Point",
+      coordinates: [loc[0].longitude, loc[0].latitude],
+      formattedAddress: loc[0].formattedAddress,
+      street: loc[0].streetusername,
+      city: loc[0].city,
+      state: loc[0].stateCode,
+      zipcode: loc[0].zipcode,
+      country: loc[0].countryCode,
+    };
 
-  // Do not save address in DB
-  this.address = undefined;
+    // Do not save the original address in DB
+    this.address = undefined;
+  }
 
   next();
 });
 
-// Cascade delete events when a helper is deleted
+// Cascade delete upcomingEvents when a helper is deleted
 HelperSchema.pre(
   "deleteOne",
   { document: true, query: false },
   async function (next) {
-    console.log(`events being removed from helper ${this._id}`);
-    await this.model("Course").deleteMany({ helper: this._id });
+    console.log(`upcomingEvents being removed from helper ${this._id}`);
+    await this.model("Event").deleteMany({ helper: this._id });
     next();
   }
 );
@@ -139,7 +124,7 @@ HelperSchema.virtual("events", {
   ref: "Event",
   localField: "_id",
   foreignField: "helper",
-  justOne: false, // we want to get a field called "events" and array of all events
+  justOne: false,
 });
 
 // Reverse populate with virtual field/attr
@@ -151,12 +136,3 @@ HelperSchema.virtual("feedbacks", {
 });
 
 export default mongoose.model("Helper", HelperSchema);
-
-/* 
-<< hides id from fronend >>
-   transform: function (_, ret) {
-        ret.id = ret._id;
-        delete ret._id;
-        delete ret.__v;
-      }
-*/
