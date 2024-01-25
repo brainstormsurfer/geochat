@@ -1,23 +1,24 @@
 // Get token from model, create cookie and send response
 export const sendTokenResponse = (user, statusCode, res) => {
-  // Create token
-  const token = user.getSignedJwtToken();
+ // Create token
+ const token = user.getSignedJwtToken();
 
-  const options = {
-    expire: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-    ),
-    // we only want the cookie to be access through the client-side's script so -
-    httpOnly: true,
-  };
+ const options = {
+   expires: new Date(
+     // Convert the 30 days in the config t0 30 days in milliseconds
+     Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+   ),
+   httpOnly: true
+ };
 
-  // securing our cookie with edit the secure flag to true ("https") for production mode
-  if (process.env.NODE_ENV === "production") {
-    options.secure = true;
-  }
+ // Send secure cookie in production
+ if (process.env.NODE_ENV === 'production') {
+   options.secure = true;
+ }
 
-  res.status(statusCode).cookie("token", token, options).json({
-    success: true,
-    token,
-  });
+ // It's up to the client-side to decide how to handle the token
+ res
+   .status(statusCode)
+   .cookie('token', token, options)
+   .json(token);
 };
