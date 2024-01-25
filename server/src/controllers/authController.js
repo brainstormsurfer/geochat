@@ -2,12 +2,10 @@
 import ErrorResponse from "../utils/errorResponse.js";
 import asyncHandler from "./../middleware/asyncHandler.js";
 import User from "../models/User.js";
-// import Helper from "../models/Helper.js";
-
 import { sendEmail } from "../utils/sendEmail.js";
 import crypto from "crypto";
 import { sendTokenResponse } from "../utils/sendTokenResponse.js";
-import { handleLogin } from "../utils/handleLogin.js";
+import { newHelperHandler } from "../utils/newHelperHandler.js";
 
 // @desc    Guest user
 // @router  POST /api/v1/auth/guest
@@ -24,40 +22,46 @@ const guest = asyncHandler(async (req, res, next) => {
     const guestUser = await User.create(guestDetails);
 
     // Update user role to "guest"
-    const updatedGuestUser = await User.findOneAndUpdate(
-      { _id: guestUser._id }, // Use a unique identifier, like _id
+    const guest = await User.findOneAndUpdate(
+      { _id: guestUser._id }, 
       { role: "guest" },
-      { new: true } // Return the updated document
+      { new: true }
     );
 
-    // Get JWT token
-    const token = updatedGuestUser.getSignedJwtToken();
-
-    res
-      .status(200)
-      .json({ success: true, message: { token, guestUser: updatedGuestUser } });
-  } catch (error) {
+    sendTokenResponse(guest, 200, res);
+    } catch (error) {
     console.error("Error handling guest user:", error);
     res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 });
 
 // @desc    Register user
-// @router  POST /api/v1/auth/register
+// @route   POST /api/v1/auth/register
 // @access  Public
 const register = asyncHandler(async (req, res, next) => {
   const { username, email, password } = req.body;
 
-  // Create user (from the model static function - create)
-  const user = await User.create({
-    username,
-    email,
-    password,
-  });
+  try {
+    // Create user (from the model static function - create)
+    const user = await User.create({
+      username,
+      email,
+      password,
+    });
 
-  const token = user.getSignedJwtToken();
+    sendTokenResponse(user, 200, res);
+  } catch (error) {
+    console.error("Error handling registration:", error);
 
-  res.status(200).json({ success: true, token });
+    // Check for validation errors and handle them
+    if (error.name === 'ValidationError') {
+      // Handle validation errors
+      return next(new ErrorResponse(error.message, 400));
+    }
+
+    // Handle other errors
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
 });
 
 // @desc    Login user
@@ -82,12 +86,12 @@ const login = asyncHandler(async (req, res, next) => {
   const isMatch = await user.matchPassword(password);
 
   if (!isMatch) {
-    // Important to return the same error message so no one can know the reason for login failure
+    //?  same error message?  (so no one can know the reason for login failure?)
     return next(new ErrorResponse("Invalid credentials", 401));
   }
 
-  // Continue with the login process and handle additional logic
-  const loginResult = await handleLogin(user);
+  // Check if user role updated to "helper"
+  const loginResult = await newHelperHandler(user);
 
   if (loginResult.success) {
     // Send token to client
@@ -106,28 +110,27 @@ const logout = asyncHandler(async (req, res, next) => {
     await User.findByIdAndDelete(req.user._id);
   }
 
-  res.cookie("token", "none", {
+  res.cookie('token', null, {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
+    secure: true, // if you are using HTTPS
+    sameSite: 'strict' 
   });
 
-  res.status(200).json({
-    success: true,
-    data: {},
-  });
+  res.status(200).json({});
 });
 
 // @desc    GET current logged in user
-// @router  GET /api/v1/auth/me
+// @router  GET /api/v1/auth/current-user
 // @access  Private
-const getMe = asyncHandler(async (req, res, next) => {
+const currentUser = asyncHandler(async (req, res, next) => {
   // const user = await User.findById(req.user.id);
   const user = req.user; // (protect)
 
   res.status(200).json({
     success: true,
-    data: user,
-  });
+    data: user
+    });
 });
 
 // @desc    Update user details
@@ -245,7 +248,7 @@ export {
   register,
   login,
   logout,
-  getMe,
+  currentUser,
   forgotPassword,
   resetPassword,
   updateDetails,
