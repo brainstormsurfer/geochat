@@ -64,8 +64,6 @@ const updateUser = asyncHandler(async (req, res, next) => {
     await Helper.findOneAndUpdate({ _id: user._id },  { upsert: true });
   }
 
-  // If the user is a guest role is updated to "helper," create a corresponding Helper instance
-
   res.status(200).json({ success: true, data: user });
 });
 
