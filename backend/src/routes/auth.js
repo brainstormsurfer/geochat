@@ -2,8 +2,8 @@ import express from "express";
 const router = express.Router();
 
 import {
-  handleLogin,
-  handleLogout,
+  login,
+  logout,
   refreshToken,
   getUserProfile,
   updateUserProfile,
@@ -11,19 +11,25 @@ import {
 } from "../controllers/index.js";
 import { loginLimiter } from "../middleware/loginLimiter.js";
 
-// Authentication Routes
-// router.route("/")
-// .post(loginLimiter,handleLogin);
+// Authentication Routes - localhost:5000/auth
+router.route(
+  // loginLimiter,
+   "/")
+.post(login)
 
-// router.route("/").post(handleLogin)
-router.post("/", handleLogin)
-router.route("/refresh").get(refreshToken);
-router.route("/logout").post(handleLogout);
-router.get("/profile", getUserProfile);
-router.put("/profile", updateUserProfile);
+// .../auth/refresh
+router.get("/refresh", refreshToken);
+
+// .../auth/logout
+router.post("/logout", logout);
+
+// .../auth/profile
+router.route("/profile")
+.get(getUserProfile)
+.put(updateUserProfile);
+
+// .../auth/reset-password/:jwt
 router.put("/reset-password/:resettoken", resetPassword);
 
-// Correct: No "/auth" prefix here
-// router.post('/', handleLogin);
 
 export default router;

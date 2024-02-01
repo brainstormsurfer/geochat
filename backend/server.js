@@ -96,14 +96,14 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use('/', rootRouter);
 
-// app.use("/api/v1", rootRouter)
-app.use("/auth", authRouter);
+// app.use("/api/v1", rootRouter) 
+app.use("/auth", authRouter); //: login, logout, refreshToken
 
 app.use("/register", registerRouter);
 app.use('/forgot', forgotPwdRouter);
 app.use('/guest', guestRouter);
 
-// app.use(verifyJWT);
+app.use(verifyJWT);
 app.use("/users", usersRouter);
 app.use("/helpers", helpersRouter);
 app.use("/events", eventsRouter);

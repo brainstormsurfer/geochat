@@ -30,8 +30,8 @@
 //   const navigate = useNavigate();
 //   const dispatch = useDispatch();
 
-//   const handleLogin = () => {
-//     console.log("handleLogin myLocation", myLocation);
+//   const login = () => {
+//     console.log("login myLocation", myLocation);
 //     if (myLocation) {
 //       proceedWithLogin({
 //         username,
@@ -42,8 +42,8 @@
 //       });
 //       navigate("/map");
 //     } else {
-//       console.log("handleLogin - NO myLocation", myLocation);
-//       console.log("handleLogin > locationErrorOccures", locationErrorOccures);
+//       console.log("login - NO myLocation", myLocation);
+//       console.log("login > locationErrorOccures", locationErrorOccures);
 //     }
 //   };
 
@@ -92,7 +92,7 @@
 //         <LoginInput username={username} setUsername={setUsername} />
 //         <LoginButton
 //           disabled={locationErrorOccures || !isUsernameValid(username)}
-//           onClickHandelr={handleLogin}
+//           onClickHandelr={login}
 //         />
 //       </div>
 //     </div>

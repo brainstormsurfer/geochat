@@ -1,29 +1,49 @@
-import User from '../models/User.js';
-import jwt from 'jsonwebtoken';
-import { generateAccessToken } from "../utils/tokenUtils.js";
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 // @desc Refresh token
 // @route GET /auth/refresh
 // @access Public - because access token has expired
 export const refreshToken = async (req, res) => {
+  console.log("in REFRESH TOKEN, cookies: ");
+
   const cookies = req.cookies;
 
   if (!cookies?.jwt)
-    return res.status(401).json({ message: "Missing refresh token" });
+    return res
+      .status(401)
+      .json({ message: "Unauthorized. Missing refresh token" });
 
-  try {
-    const refreshToken = cookies.jwt;
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+      console.log("cookies.jwt",cookies.jwt)
+  const refreshToken = cookies.jwt;
 
-    const foundUser = await User.findOne({ username: decoded.username }).exec();
+  jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET,
+    async (err, decoded) => {
+      if (err) return res.status(403).json({ message: "Forbidden." });
 
-    if (!foundUser)
-      return res.status(401).json({ message: "Invalid refresh token" });
-
-    const accessToken = await generateAccessToken(foundUser);
-    res.json({ accessToken });
-  } catch (err) {
-    console.error(err);
-    res.status(403).json({ message: "Invalid token or error" });
-  }
+      const foundUser = await User.findOne({
+        username: decoded.username,
+      }).exec();
+      
+      if (!foundUser)
+        return res
+          .status(401)
+          .json({ message: "Unauthorized. Invalid refresh token." });
+          
+          const accessToken =  jwt.sign(
+            {
+              "UserInfo": {
+                "username": foundUser.username,
+                "roles": foundUser.roles,
+              },
+            },
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: process.env.JWT_ACCESS_EXPIRE }
+            );
+            
+            res.json({ accessToken });
+          }
+        );
 };

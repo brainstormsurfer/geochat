@@ -10,7 +10,7 @@ const Header = () => {
   const queryClient = useQueryClient();
   const user = useSelector((state) => state.userState.user);
 
-  const handleLogout = () => {
+  const logout = () => {
     navigate('/');
     dispatch(clearCart());
     dispatch(logoutUser());
@@ -25,7 +25,7 @@ const Header = () => {
             <p className='text-xs sm:text-sm'>Hello, {user.username}</p>
             <button
               className='btn btn-xs btn-outline btn-primary'
-              onClick={handleLogout}
+              onClick={logout}
             >
               logout
             </button>

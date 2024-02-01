@@ -62,7 +62,7 @@ const EventSchema = new mongoose.Schema(
     toJSON: {
       transform(_, ret) {
         ret.id = ret._id;
-        delete ret._id;ds
+        delete ret._id;
         delete ret.password;
         delete ret.__v;
       },
