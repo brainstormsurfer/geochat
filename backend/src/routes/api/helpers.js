@@ -6,9 +6,11 @@ import {
   createHelper,
   updateHelper,
   deleteHelper,
+  addEventToHelper,
   getHelpersInRadius,
   helperPhotoUpload,
 } from "../../controllers/helpersController.js";
+
 
 import Helper from "../../models/Helper.js";
 
@@ -20,6 +22,7 @@ import feedbacksRouter from "./feedbacks.js";
 const router = express.Router({ mergeParams: true });
 
 import { advancedResults } from "../../middleware/advancedResults.js";
+
 // import { verifyJWT } from "../middleware/verifyJWT.js";
 
   
@@ -28,6 +31,8 @@ import { advancedResults } from "../../middleware/advancedResults.js";
 // Re-route into other resource routers
 router.use("/:helperId/events", eventsRouter);
 router.use("/:helperId/feedbacks", feedbacksRouter);
+
+// router.post("/:helperId/feedbacks", addFeedbackToHelper);
 
 
 // getting events/feedbacks for a specific helper (not using advanced results
@@ -49,6 +54,12 @@ router
     // (via event's reverse populate with virtuals)
     // And via the {mergeParams: true}    
   .post(createHelper);
+
+
+// helpers/:helperId/event/:eventId
+router.
+put('/:helperId/events/eventId', addEventToHelper);
+
 
 router
   .route("/:id")

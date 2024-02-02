@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import geocoder from "../utils/geocoder.js";
 
-const helperSchema = new mongoose.Schema(
+const HelperSchema = new mongoose.Schema(
   {
     description: {
       type: String,
@@ -49,6 +49,13 @@ const helperSchema = new mongoose.Schema(
       type: String,
       default: "no-photo.jpg",
     },
+    // events: [
+    //   {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: "Event",
+    //     required: false,
+    //   },
+    // ],
   },
   {
     toJSON: {
@@ -73,31 +80,32 @@ const helperSchema = new mongoose.Schema(
   }
 );
 
+//! seeder error about google geo location api key 
 // Geocode & create location field
-helperSchema.pre("save", async function (next) {
-  // Check if the address field is present
-  if (this.address) {
-    const loc = await geocoder.geocode(this.address);
-    this.location = {
-      type: "Point",
-      coordinates: [loc[0].longitude, loc[0].latitude],
-      formattedAddress: loc[0].formattedAddress,
-      street: loc[0].streetusername,
-      city: loc[0].city,
-      state: loc[0].stateCode,
-      zipcode: loc[0].zipcode,
-      country: loc[0].countryCode,
-    };
+// HelperSchema.pre("save", async function (next) {
+//   // Check if the address field is present
+//   if (this.address) {
+//     const loc = await geocoder.geocode(this.address);
+//     this.location = {
+//       type: "Point",
+//       coordinates: [loc[0].longitude, loc[0].latitude],
+//       formattedAddress: loc[0].formattedAddress,
+//       street: loc[0].streetusername,
+//       city: loc[0].city,
+//       state: loc[0].stateCode,
+//       zipcode: loc[0].zipcode,
+//       country: loc[0].countryCode,
+//     };
 
-    // Do not save the original address in DB
-    this.address = undefined;
-  }
+//     // Do not save the original address in DB
+//     this.address = undefined;
+//   }
 
-  next();
-});
+//   next();
+// });
 
 // Cascade delete upcomingEvents when a helper is deleted
-helperSchema.pre(
+HelperSchema.pre(
   "deleteOne",
   { document: true, query: false },
   async function (next) {
@@ -108,7 +116,7 @@ helperSchema.pre(
 );
 
 // Cascade delete feedbacks when a helper is deleted
-helperSchema.pre(
+HelperSchema.pre(
   "deleteOne",
   { document: true, query: false },
   async function (next) {
@@ -119,20 +127,20 @@ helperSchema.pre(
 );
 
 // Reverse populate with virtual field/attr
-helperSchema.virtual("events", {
+HelperSchema.virtual("events", {
   ref: "Event",
   localField: "_id",
-  foreignField: "helper",
+  foreignField: "helpers",
   justOne: false,
 });
 
 // Reverse populate with virtual field/attr
-helperSchema.virtual("feedbacks", {
+HelperSchema.virtual("feedbacks", {
   ref: "Feedback",
   localField: "_id",
   foreignField: "helper",
   justOne: false, // we want to get a field called "feedbacks" and array of all feedbacks
 });
 
-const Helper = mongoose.model("Helper", helperSchema);
+const Helper = mongoose.model("Helper", HelperSchema);
 export default Helper;

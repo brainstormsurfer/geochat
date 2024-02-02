@@ -4,7 +4,7 @@ import User from "../models/User.js";
 // @route   GET /auth/profile
 // @access  Private
 const getUserProfile = async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.username._id);
 
   if (user) {
     res.json({
@@ -22,7 +22,7 @@ const getUserProfile = async (req, res) => {
 // @route   PUT /auth/profile
 // @access  Private
 const updateUserProfile = async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.username._id);
 
   if (user) {
     user.username = req.body.username || user.username;

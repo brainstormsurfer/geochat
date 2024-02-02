@@ -39,24 +39,28 @@ const EventSchema = new mongoose.Schema(
         return differenceInDays(this.date, new Date());
       },
     },
-    user: [
+    // user: [
+    //   {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: "Helper",
+    //     foreignField: "events",
+    //     required: false,
+    //   },
+    // ],   
+    // helper: [
+    //   {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: "Helper",
+    //     required: false,
+    //   },
+    // ],
+    helpers: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "Helper",
-        foreignField: "events",
         required: false,
       },
     ],
-    helper: {
-      type: mongoose.Schema.ObjectId,
-      ref: "Helper",
-      required: false,
-    },
-    // helpers: [{
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: "Helper",
-    //   required: false,
-    // }],
   },
   {
     toJSON: {
@@ -87,6 +91,18 @@ EventSchema.pre("save", function (next) {
   next();
 });
 
+// Virtual field to populate helpers for an event
+EventSchema.virtual('helpersData', {
+  ref: 'Helper',
+  localField: 'helpers',
+  foreignField: '_id',
+  justOne: false,
+});
+
+const Event = mongoose.model("Event", EventSchema);
+export default Event;
+
+
 // EventSchema.virtual("helpers", {
 //   ref: "Helper",
 //   foreignField: "_id",
@@ -94,5 +110,3 @@ EventSchema.pre("save", function (next) {
 //   justOne: false,
 // });
 
-const Event = mongoose.model("Event", EventSchema);
-export default Event;

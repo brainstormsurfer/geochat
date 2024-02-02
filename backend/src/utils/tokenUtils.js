@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 export const generateAccessToken = async (foundUser, res) => {
-//   console.log("[generate access token] FOUND (logged in) USER?", foundUser);
+  console.log("[generate access token] FOUND (logged in) USER?", foundUser);
   
   const secureCookieOptions = {
     httpOnly: true, //accessible only by web server
@@ -10,7 +10,7 @@ export const generateAccessToken = async (foundUser, res) => {
     sameSite: "none", // Cross site cookie
     maxAge: Date.now() + process.env.JWT_MAX_AGE * 24 * 60 * 60 * 1000,
   };
-// console.log("[generate access token] secureCookieOptions.secure", secureCookieOptions.secure)
+
   const accessToken = jwt.sign(
     {
       "UserInfo": {
@@ -22,6 +22,7 @@ export const generateAccessToken = async (foundUser, res) => {
     // { expiresIn: '15s' }
     { expiresIn: process.env.JWT_ACCESS_EXPIRE }
   );
+  
   const refreshToken = jwt.sign(
     { username: foundUser.username },
     process.env.REFRESH_TOKEN_SECRET,

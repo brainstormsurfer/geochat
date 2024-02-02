@@ -8,7 +8,7 @@ const app = express();
 import { logger, logEvents } from "./src/middleware/logger.js";
 
 import cors from "cors";
-import { corsOptions } from "./config/corsOptions.js";
+// import { corsOptions } from "./config/corsOptions.js";
 
 import path from "path";
 import { fileURLToPath } from "url";
@@ -103,7 +103,7 @@ app.use("/register", registerRouter);
 app.use('/forgot', forgotPwdRouter);
 app.use('/guest', guestRouter);
 
-app.use(verifyJWT);
+// app.use(verifyJWT);
 app.use("/users", usersRouter);
 app.use("/helpers", helpersRouter);
 app.use("/events", eventsRouter);

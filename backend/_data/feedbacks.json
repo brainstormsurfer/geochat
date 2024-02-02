@@ -3,56 +3,42 @@
     "_id": "5d7a514b5d2c12c7449be021",
     "title": "Tech wizardry at Mystic Oasis",
     "text": "The helper at Mystic Oasis Gathering was a tech wizard! Their guidance and expertise made the helper unforgettable. A big thank you!",
-    "rating": 10,
-    "helper": "5d7a514b5d2c12c7449be042",
-    "user": "5c8a1d5b0190b214360dc032"
-    },
+    "rating": 10
+  },
   {
     "_id": "5d7a514b5d2c12c7449be022",
     "title": "Guiding light in the Vortex",
     "text": "Navigating the Aurora Vortex Experience was made easy and enjoyable with the guidance of our helper. Their expertise shone brightly throughout the helper!",
-    "rating": 8,
-    "helper": "5d7a514b5d2c12c7449be042",
-    "user": "5c8a1d5b0190b214360dc033"
-    },
+    "rating": 8
+  },
   {
     "_id": "5d7a514b5d2c12c7449be023",
     "title": "Not-so-great encounter",
     "text": "The helper during the Aurora Vortex Experience didn't quite live up to expectations. It was not the smoothest journey, but there's room for improvement.",
-    "rating": 4,
-    "helper": "5d7a514b5d2c12c7449be045",
-    "user": "5c8a1d5b0190b214360dc036"
-    },
+    "rating": 4
+  },
   {
     "_id": "5d7a514b5d2c12c7449be024",
     "title": "Positive vibes at Elysian Serenity",
     "text": "Elysian Serenity Rave was an absolute blast, and our helper's positive vibes and assistance added so much to the experience. Kudos!",
-    "rating": 7,
-    "helper": "5d7a514b5d2c12c7449be045",
-    "user": "5c8a1d5b0190b214360dc037"
-    },
+    "rating": 7
+  },
   {
     "_id": "5d7a514b5d2c12c7449be025",
     "title": "Average encounter at Elysian Serenity",
     "text": "The encounter during Elysian Serenity Rave was decent, but the helper's guidance didn't stand out. An average experience overall.",
-    "rating": 5,
-    "helper": "5d713995b721c3bb38c1f5d0",
-    "user": "5c8a1d5b0190b214360dc038"
-    },
+    "rating": 5
+  },
   {
     "_id": "5d7a514b5d2c12c7449be026",
     "title": "Code mastery with Devcentral helper",
     "text": "The Devcentral helper showcased code mastery during the helper. Their guidance was invaluable, especially in the coding sessions. A fantastic experience!",
-    "rating": 10,
-    "helper": "5d713995b721c3bb38c1f5d0",
-    "user": "5c8a1d5b0190b214360dc039"
-    },
+    "rating": 10
+  },
   {
     "_id": "5d7a514b5d2c12c7449be027",
     "title": "Investment well worth it",
     "text": "The helper at Devcentral made the investment in the helper well worth it. Their guidance was instrumental in gaining new skills and insights. Highly recommended!",
-    "rating": 7,
-    "helper": "5c8a1d5b0190b214360dc031",
-    "user": "5c8a1d5b0190b214360dc040"
-    }
+    "rating": 7
+  }
 ]

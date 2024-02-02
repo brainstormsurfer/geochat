@@ -36,7 +36,8 @@ const getHelpers = async (req, res, next) => {
 // @route   GET /helpers/:id
 // @access  Private
 const getHelper = async (req, res, next) => {
-  const helper = await Helper.findById(req.params.id);
+  const helperId = await Helper.findById(req.params.id);
+  const helper = await Helper.findById(helperId).populate("events");
 
   if (!helper) {
     return next(
@@ -53,24 +54,55 @@ const getHelper = async (req, res, next) => {
 // @access  Private/Admin
 const createHelper = async (req, res, next) => {
   // Check if the logged-in user is an admin
-  const adminUser = await User.findOne({ _id: req.user.id, role: "admin" });
+  const adminUser = await User.findOne({ _id: req.username.id, role: "admin" });
 
   if (!adminUser) {
     return next(
-      new ErrorResponse(`User with ID ${req.user.id} is not permitted for this task`, 403)
+      new ErrorResponse(`User with ID ${req.username.id} is not permitted for this task`, 403)
     );
   }
 
   // Create the Helper
   const helper = await Helper.create({
-    id: req.user.id,
+    id: req.username.id,
     description: "added by admin, please edit..."
   });
 
   // Update the corresponding user's role to include "helper"
-  await User.findByIdAndUpdate(req.user.id, { role: "helper" });
+  await User.findByIdAndUpdate(req.username.id, { role: "helper" });
 
   res.status(201).json({ success: true, data: helper });
+};
+// @desc    Update helper
+// @route   PUT /helpers/:helperId/event/:eventId
+// @access  Private
+// Add an event to a helper
+const addEventToHelper = async (req, res, next) => {
+  try {
+    const eventId = req.params.eventId;
+    const helperId = req.params.helperId;
+
+    // Check if both the event and helper exist
+    const event = await Event.findById(eventId);
+    const helper = await Helper.findById(helperId);
+
+    if (!event || !helper) {
+      return res.status(404).json({ success: false, message: 'Event or helper not found' });
+    }
+
+    // Update the helper's events array
+    helper.events.push(event);
+    await helper.save();
+
+    // Update the event's helpers array
+    event.helpers.push(helper);
+    await event.save();
+
+    res.status(200).json({ success: true, message: 'Event added to helper successfully' });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 };
 
 
@@ -79,7 +111,7 @@ const createHelper = async (req, res, next) => {
 // @access  Private
 const updateHelper = async (req, res, next) => {
   // let helper = await Helper.findById(req.params.id);
-  let helper = await Helper.findOne({ id: req.user.id });
+  let helper = await Helper.findOne({ id: req.username.id });
 
 
   if (!helper) {
@@ -90,10 +122,10 @@ const updateHelper = async (req, res, next) => {
   }
 
   // Make sure editor is the helper
-  if (Helper.id.toString() !== req.user.id || req.user.role !== "admin") {
+  if (Helper.id.toString() !== req.username.id || req.username.role !== "admin") {
     return next(
       new ErrorResponse(
-        `User ${req.user.id} is not authorized to update this helper`,
+        `User ${req.username.id} is not authorized to update this helper`,
         401
       )
     );
@@ -112,7 +144,7 @@ const updateHelper = async (req, res, next) => {
 // @access  Private
 const deleteHelper = async (req, res, next) => {
   // const helper = await Helper.findById(req.params.id);
-  const helper = await Helper.findOne({ id: req.user.id });
+  const helper = await Helper.findOne({ id: req.username.id });
 
 
   if (!helper) {
@@ -123,10 +155,10 @@ const deleteHelper = async (req, res, next) => {
   }
 
   // Make sure editted user is the helper
-  if (Helper.id.toString() !== req.user.id && req.user.role !== "admin") {
+  if (Helper.id.toString() !== req.username.id && req.username.role !== "admin") {
     return next(
       new ErrorResponse(
-        `User ${req.user.id} is not authorized to update this helper`,
+        `User ${req.username.id} is not authorized to update this helper`,
         401
       )
     );
@@ -176,10 +208,10 @@ const helperPhotoUpload = async (req, res, next) => {
   }
 
   // Make sure editted user is the helper
-  if (Helper.id.toString() !== req.user.id && req.user.role !== "admin") {
+  if (Helper.id.toString() !== req.username.id && req.username.role !== "admin") {
     return next(
       new ErrorResponse(
-        `User ${req.user.id} is not authorized to update this helper`,
+        `User ${req.username.id} is not authorized to update this helper`,
         404
       )
     );
@@ -228,6 +260,7 @@ export {
   getHelpers,
   getHelper,
   createHelper,
+  addEventToHelper,
   updateHelper,
   deleteHelper,
   getHelpersInRadius,

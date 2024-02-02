@@ -18,6 +18,21 @@ const getUsers = async (req, res, next) => {
   res.status(200).json(users);
 };
 
+// @desc    Get user
+// @router  GET /users/:id
+// @access  Private/Admin
+const getUser = async (req, res, next) => {
+  console.log("In Get Users");
+  const user = await User.findById(req.params.id)
+
+  if (!user) {
+    console.log("No user found with id -", req.params.id);
+    return res.status(400).json({ message: "No user found" });
+  }
+
+  res.status(200).json(user);
+};
+
 // @desc    Create user
 // @router  POST /users
 // @access  Private/Admin
@@ -137,4 +152,4 @@ const deleteUser = async (req, res, next) => {
   res.json(reply);
 };
 
-export { getUsers, createUser, updateUser, deleteUser };
+export { getUsers, getUser, createUser, updateUser, deleteUser };

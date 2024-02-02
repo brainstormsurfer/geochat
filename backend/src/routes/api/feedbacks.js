@@ -6,6 +6,7 @@ import {
   addFeedback,
   updateFeedback,
   deleteFeedback,
+  // addFeedbackToHelper
 } from "../../controllers/feedbacksController.js";
 
 import Feedback from "../../models/Feedback.js";
@@ -29,12 +30,15 @@ router
     }),
     getFeedbacks
   )
-  .post(addFeedback);
+  // .post(addFeedback);
 
 router
   .route("/:id")
   .get(getFeedback)
   .put(updateFeedback)
-  .delete(deleteFeedback);
+  .delete(deleteFeedback)
+
+router
+  .post("/:helperId",addFeedback)
 
 export default router;

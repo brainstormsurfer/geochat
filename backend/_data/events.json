@@ -6,8 +6,7 @@
     "Date": "2024-01-25T12:00:00Z",
     "expectedPresence": 80,
     "potentialExplorers": 4,
-    "IsAtNature": true,
-    "user": "5d7a514b5d2c12c7449be045"
+    "IsAtNature": true
   },
   {
     "_id": "5d725c84c4ded7bcb480eaa0",
@@ -16,8 +15,7 @@
     "Date": "2024-01-25T12:00:00Z",
     "expectedPresence": 150,
     "potentialExplorers": 0,
-    "IsAtNature": true,
-    "user": "5d7a514b5d2c12c7449be045"
+    "IsAtNature": true
   },
   {
     "_id": "5d725cb9c4ded7bcb480eaa1",
@@ -26,8 +24,7 @@
     "Date": "2024-01-25T12:00:00Z:30:00 AM",
     "expectedPresence": 5,
     "potentialExplorers": 0,
-    "IsAtNature": true,
-    "user": "5d7a514b5d2c12c7449be046"
+    "IsAtNature": true
   },
   {
     "_id": "5d725cd2c4ded7bcb480eaa2",
@@ -36,8 +33,7 @@
     "Date": "2024-01-25T12:00:00Z",
     "expectedPresence": 25,
     "potentialExplorers": 17,
-    "IsAtNature": true,
-    "user": "5d7a514b5d2c12c7449be046"
+    "IsAtNature": true
   },
   {
     "_id": "5d725ce8c4ded7bcb480eaa3",
@@ -46,8 +42,7 @@
     "Date": "2024-01-25T12:00:00Z",
     "expectedPresence": 400,
     "potentialExplorers": 6,
-    "IsAtNature": true,
-    "user": "5c8a1d5b0190b214360dc031"
+    "IsAtNature": true
   },
   {
     "_id": "5d725cfec4ded7bcb480eaa4",
@@ -56,8 +51,7 @@
     "Date": "2024-01-25T12:00:00Z",
     "expectedPresence": 600,
     "potentialExplorers": 0,
-    "IsAtNature": false,
-    "user": "5c8a1d5b0190b214360dc031"
+    "IsAtNature": false
   },
   {
     "_id": "5d725cfec4ded7bcb480eaa5",
@@ -66,8 +60,7 @@
     "Date": "2024-01-25T12:00:00Z",
     "expectedPresence": 55,
     "potentialExplorers": 3,
-    "IsAtNature": false,
-    "user": "5c8a1d5b0190b214360dc032"
+    "IsAtNature": false
   },
   {
     "_id": "5d725cfec4ded7bcb480eaa6",
@@ -76,8 +69,7 @@
     "Date": "2024-01-25T12:00:00Z",
     "expectedPresence": 13,
     "potentialExplorers": 2,
-    "IsAtNature": false,
-    "user": "5c8a1d5b0190b214360dc032"
+    "IsAtNature": false
   },
   {
     "_id": "5d725cfec4ded7bcb480eaa7",
@@ -86,7 +78,6 @@
     "Date": "2024-01-25T12:00:00Z",
     "expectedPresence": 1,
     "potentialExplorers": 1,
-    "IsAtNature": true,
-    "user": "5c8a1d5b0190b214360dc032"
+    "IsAtNature": true
   }
 ]

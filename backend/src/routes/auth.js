@@ -11,7 +11,8 @@ import {
 } from "../controllers/index.js";
 import { loginLimiter } from "../middleware/loginLimiter.js";
 
-// Authentication Routes - localhost:5000/auth
+// Authentication Routes - localhost:5000/auth/...
+
 router.route(
   // loginLimiter,
    "/")

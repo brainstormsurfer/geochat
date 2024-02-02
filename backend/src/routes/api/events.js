@@ -1,37 +1,42 @@
+import express from "express";
+const router = express.Router({ mergeParams: true });
 import {
   getEvents,
   getEvent,
   addEvent,
+  addHelperToEvent,
   updateEvent,
   deleteEvent,
 } from "../../controllers/eventsController.js";
 
+
 import Event from "../../models/Event.js";
 
-import express from "express";
 import { advancedResults } from "../../middleware/advancedResults.js";
 
-const router = express.Router({ mergeParams: true });
 
 router
   .route("/")
   .get(
     advancedResults(Event, {
-      path: "helper",
+      path: "helpers",
       select: "mobility",
     }),getEvents)
     .post(
-      // protect, 
+      // protect, // TODO
       addEvent)
   
   router
   .route("/:id")
   .get(getEvent)
   .put(
-    // protect, 
+    // protect,  // TODO
     updateEvent)
   .delete(
-    // protect, 
+    // protect,   // TODO
     deleteEvent);
 
+
+ // /events/eventId/helpers/:helperId
+router.put('/:eventId/helpers/:helperId', addHelperToEvent);
 export default router;

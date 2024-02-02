@@ -15,7 +15,7 @@ const FeedbackSchema = new mongoose.Schema(
     rating: {
       type: Number,
       min: 1,
-      max: 10,
+      max: 10, // TODO: masx 5 instead
       required: [false, "Please add a rating between 1 and 10"],
     },
     helper: {
@@ -24,10 +24,9 @@ const FeedbackSchema = new mongoose.Schema(
       required: false,
     },
     user: {
-      // user of feedback
       type: mongoose.Schema.ObjectId,
       ref: "User",
-      required: false, //?
+      required: true,
     },
   },
   {
@@ -54,7 +53,8 @@ const FeedbackSchema = new mongoose.Schema(
 );
 
 // Prevent user from submitting more than one feedbacks per helper
-FeedbackSchema.index({ helper: 1, user: 1 }, { unique: true });
+FeedbackSchema.index({ helper: 1, user: 1 || null }, { unique: true });
+// db.feedbacks.createIndex({ helper: 1, user: 1 }, { unique: true })
 
 // Static method to get avg of feedbacks ratings
 FeedbackSchema.statics.getAverageRating = async function (
@@ -83,7 +83,7 @@ FeedbackSchema.statics.getAverageRating = async function (
         obj[0].feedbacks.length > 1
           ? updatedTotalRating / (obj[0].feedbacks.length - 1)
           : 0;
-      obj[0].averageRating = updatedAverageRating;
+      obj[0].averageRating = updatedAverageRating.toFixed(2);
     }
 
     try {

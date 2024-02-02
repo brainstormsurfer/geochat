@@ -1,6 +1,8 @@
 import ErrorResponse from "../utils/errorResponse.js";
 import Feedback from "../models/Feedback.js";
 import Helper from "../models/Helper.js";
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 // @desc    Get all feedbacks
 // @route   GET /feedbacks
@@ -44,28 +46,6 @@ const getFeedback = async (req, res, next) => {
   res.status(200).json({ success: true, data: feedback });
 };
 
-// @desc    Add feedback
-// @route   POST /feedbacks
-// @route   POST /helpers/:helperId/feedbacks
-// @access  Private
-const addFeedback = async (req, res, next) => {
-  req.body.helper = req.params.helperId;
-  req.body.user = req.user.id;
-
-  // admin can give a feedback to an helper
-  // while a user can give a general feedback
-  const helper = await Helper.findById(req.params.helperId);
-
-  if (!helper) {
-    return next(
-      new ErrorResponse(`No helper with the id of ${req.params.helperId}`),
-      404
-    );
-  }
-
-  const feedback = await Feedback.create(req.body);
-  res.status(201).json({ success: true, data: feedback });
-};
 
 // @desc    Update feedback
 // @route   PUT /feedbacks/:id
@@ -81,11 +61,11 @@ const updateFeedback = async (req, res, next) => {
   }
 
   // Make sure user is feedback provider
-  // if (Feedback.user.toString() !== req.user.id || req.user.role === "editor") {
-  if (Feedback.user.toString() !== req.user.id && req.user.role == !"admin") {
+  // if (Feedback.user.toString() !== req.username.id || req.username.role === "editor") {
+  if (Feedback.user.toString() !== req.username.id && req.username.role == !"admin") {
     return next(
       new ErrorResponse(
-        `User ${req.user.id} is not authorize to update feedback ${Feedback._id}`
+        `User ${req.username.id} is not authorize to update feedback ${Feedback._id}`
       ),
       401
     );
@@ -114,11 +94,11 @@ const deleteFeedback = async (req, res, next) => {
   }
 
   // Make sure user is feedback owner
-  // if (Feedback.user.toString() !== req.user.id || req.user.role === "editor") {
-  if (Feedback.user.toString() !== req.user.id && req.user.role !== "admin") {
+  // if (Feedback.user.toString() !== req.username.id || req.username.role === "editor") {
+  if (Feedback.user.toString() !== req.username.id && req.username.role !== "admin") {
     return next(
       new ErrorResponse(
-        `User ${req.user.id} is not authorize to delete feedback ${Feedback._id}`
+        `User ${req.username.id} is not authorize to delete feedback ${Feedback._id}`
       ),
       404
     );
@@ -128,10 +108,45 @@ const deleteFeedback = async (req, res, next) => {
   res.status(201).json({ success: true, data: {} });
 };
 
+
+const addFeedback = async (req, res, next) => {
+  req.body.helper = req.params.helperId;
+
+  const helper = await Helper.findById(req.params.helperId);
+
+  if (!helper) {
+    return next(
+      new ErrorResponse(`No helper with the id of ${req.params.helperId}`),
+      404
+    );
+  }
+
+  // Extract user information from the JWT token in the cookie
+  const decodedToken = jwt.decode(req.cookies.jwt, { complete: true });
+  console.log("decodedToken", decodedToken)
+
+  const username = decodedToken.payload.username;
+
+  let user
+  if (username)
+  user = await User.findOne({ username });
+
+  if (!user) {
+    return next(new ErrorResponse(`No user found for the given token`), 404);
+  }
+
+  // Adding user id in order to prevent more than 1 feedback per helper
+  req.body.user = user._id;
+  const feedback = await Feedback.create(req.body);
+
+  res.status(201).json({ success: true, data: feedback });
+};
+
 export {
   getFeedbacks,
   getFeedback,
   addFeedback,
   updateFeedback,
   deleteFeedback,
+  // addFeedbackToHelper
 };

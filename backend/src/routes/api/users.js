@@ -2,7 +2,7 @@ import express from "express";
 import User from "../../models/User.js";
 import {
   getUsers,
-  // getUser,
+  getUser,
   createUser,
   updateUser,
   deleteUser,
@@ -18,9 +18,12 @@ const router = express.Router({ mergeParams: true });
 router
   .route('/')
   .get(advancedResults(User), getUsers)
-  // .get(getUser)
   .post(createUser)
   .put(updateUser)
   .delete(deleteUser);
+  
+router
+  .route('/:id')
+  .get(getUser)
 
 export default router;

@@ -21,8 +21,7 @@ const UserSchema = new mongoose.Schema(
       type: [String],
       default: ["user"],
       enum: ["user", "publisher", "helper", "guest", "admin"],
-    },
-    refreshToken: [String],
+    }    
   },
   {
     timestamps: true,
@@ -47,40 +46,27 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-UserSchema.pre("save", function (next) {
-  const user = this;
-  if (!user.isModified("password")) {
-    return next();  // 1st 'next' in case user is not new, i guess
-  }
-  bcrypt.genSalt(6, (err, salt) => {
-    if (err) {
-      return next(err);   // 2nd 'next' in case of error in genSalt
-    }
-    bcrypt.hash(user.password, salt, null, (error, hash) => {
-      if (error) {
-        return next(error);  // 3rd 'next' in case of error in hash
-      }
+UserSchema.pre("save", async function (next) {
+  console.log("PRE SAVE PASSWORD CHECK (USER SCHEMA)");
+
+  try {
+    if (this.isModified("password") || (!this.password.startsWith("$2") && !this.password.startsWith("$argon2"))) {
+      const user = this;
+      const salt = await bcrypt.genSalt(6);
+      const hash = await bcrypt.hash(user.password, salt);
       user.password = hash;
-      next(); // 4th 'next' in case of genSalt success
-    });
-    next();
-  });
+      next();
+    }
+  } catch (error) {
+    return next(error);
+  }
 });
 
-// UserSchema.pre("save", async function (next) {
-//   if (this.isModified("password")) {
-//     const user = this;
-//     bcrypt.hash(user.password, 6, function (err, hash) {
-//       if (err) {
-//         return next(err);
-//       }
-//       user.password = hash;
-//       next();
-//     });
-//   } else {
-//     next();
-//   }
-// });
+UserSchema.methods.getSignedJwtToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
+};
 
 UserSchema.methods.getResetPasswordToken = function () {
   const resetToken = crypto.randomBytes(20).toString("hex");
@@ -98,17 +84,3 @@ UserSchema.methods.getResetPasswordToken = function () {
 const User = mongoose.model("User", UserSchema);
 
 export default User;
-
-// UserSchema.pre('save', async function (next) {
-//   if (!this.isModified('password')) {
-//     return next();
-//   }
-
-//   const salt = await bcrypt.genSalt(6);
-//   this.password = await bcrypt.hash(this.password, salt);
-//   next();
-// });
-
-// UserSchema.methods.matchPassword = async function (enteredPassword) {
-//   return await bcrypt.compare(enteredPassword, this.password);
-// };
